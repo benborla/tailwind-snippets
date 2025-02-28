@@ -14,9 +14,9 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { createSnippet } from '@/app/actions';
 import { useRouter } from 'next/navigation';
+import CodeEditor from './CodeEditor';
 
 interface CreateSnippetDialogProps {
   onSnippetCreated: () => void;
@@ -25,6 +25,7 @@ interface CreateSnippetDialogProps {
 export default function CreateSnippetDialog({ onSnippetCreated }: CreateSnippetDialogProps) {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [code, setCode] = useState('');
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -35,7 +36,7 @@ export default function CreateSnippetDialog({ onSnippetCreated }: CreateSnippetD
     const data = {
       title: formData.get('title') as string,
       description: formData.get('description') as string,
-      code: formData.get('code') as string,
+      code: code,
       category: formData.get('category') as string,
     };
 
@@ -44,6 +45,7 @@ export default function CreateSnippetDialog({ onSnippetCreated }: CreateSnippetD
       setOpen(false);
       onSnippetCreated();
       e.currentTarget.reset();
+      setCode('');
     } catch (error) {
       console.error('Failed to create snippet:', error);
     } finally {
@@ -59,7 +61,7 @@ export default function CreateSnippetDialog({ onSnippetCreated }: CreateSnippetD
           New Snippet
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[550px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[650px] max-h-[90vh] overflow-y-auto">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>Create Snippet</DialogTitle>
@@ -89,7 +91,7 @@ export default function CreateSnippetDialog({ onSnippetCreated }: CreateSnippetD
             </div>
             <div className="grid gap-2">
               <Label htmlFor="description">Description</Label>
-              <Textarea
+              <Input
                 id="description"
                 name="description"
                 placeholder="A beautiful button with an icon..."
@@ -98,12 +100,10 @@ export default function CreateSnippetDialog({ onSnippetCreated }: CreateSnippetD
             </div>
             <div className="grid gap-2">
               <Label htmlFor="code">Code</Label>
-              <Textarea
-                id="code"
-                name="code"
-                placeholder="<button class='px-4 py-2 bg-blue-500 text-white rounded-md'>Click me</button>"
-                required
-                className="col-span-3 font-mono min-h-[150px]"
+              <CodeEditor
+                onChange={setCode}
+                initialValue={code}
+                className="col-span-3"
               />
             </div>
           </div>
@@ -116,7 +116,7 @@ export default function CreateSnippetDialog({ onSnippetCreated }: CreateSnippetD
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading}>
+            <Button type="submit" disabled={isLoading || !code.trim()}>
               {isLoading ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
