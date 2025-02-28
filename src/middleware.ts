@@ -8,8 +8,7 @@ export default withAuth({
 
 export const config = {
   matcher: [
-    // Protected routes
-    '/',
-    '/api/snippets/:path*',
+    // Only protect admin routes
+    '/admin/:path*',
   ],
 }; 

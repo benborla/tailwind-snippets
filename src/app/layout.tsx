@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { PostHogProvider, PostHogPageview } from "@/components/providers/posthog-provider";
 import { SessionProvider } from "@/components/providers/session-provider";
+import { Header } from "@/components/Header";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,8 +29,13 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <PostHogPageview />
-              {children}
+              <div className="relative min-h-screen flex flex-col">
+                <Header />
+                <main className="flex-1">
+                  <PostHogPageview />
+                  {children}
+                </main>
+              </div>
             </ThemeProvider>
           </PostHogProvider>
         </SessionProvider>
