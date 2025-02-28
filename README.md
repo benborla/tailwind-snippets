@@ -1,24 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tailwind CSS Snippets Manager
 
-## Getting Started
+A Next.js application for managing and previewing Tailwind CSS snippets. Built with Next.js, Tailwind CSS, Drizzle ORM, and SQLite.
 
-First, run the development server:
+## Features
 
+- Create and store Tailwind CSS snippets
+- Live preview of snippets
+- Categorize snippets
+- Responsive grid layout
+- SQLite database for persistence
+
+## Setup
+
+1. Install dependencies:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Initialize the database:
+```bash
+npm run db:generate
+npm run db:push
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Start the development server:
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Usage
+
+1. Create a new snippet:
+   - Fill in the title and code
+   - Optionally add a description and category
+   - Click "Create Snippet"
+
+2. View snippets:
+   - All snippets are displayed in a responsive grid
+   - Each snippet shows:
+     - Title and description
+     - Code preview
+     - Live rendered preview
+     - Category tag (if provided)
+
+## Development
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run db:studio` - Open Drizzle Studio to manage database
+- `npm run db:generate` - Generate database migrations
+- `npm run db:push` - Push migrations to database
+
+## Technologies
+
+- Next.js 14
+- React 18
+- Tailwind CSS
+- Drizzle ORM
+- SQLite
+- TypeScript
 
 ## Learn More
 

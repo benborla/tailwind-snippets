@@ -1,0 +1,86 @@
+@layer base {
+  pre[class*="language-"],
+  code[class*="language-"] {
+    color: #ebdbb2;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    direction: ltr;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    line-height: 1.5;
+    tab-size: 4;
+    hyphens: none;
+    background: none;
+    font-size: 13px;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Gruvbox colors */
+  .token.comment,
+  .token.prolog,
+  .token.doctype,
+  .token.cdata {
+    color: #928374;
+    font-style: italic;
+  }
+
+  .token.namespace {
+    opacity: 0.7;
+  }
+
+  .token.tag,
+  .token.operator,
+  .token.keyword {
+    color: #fb4934;
+  }
+
+  .token.property,
+  .token.function {
+    color: #8ec07c;
+  }
+
+  .token.tag-id,
+  .token.selector,
+  .token.atrule-id {
+    color: #fabd2f;
+  }
+
+  .token.attr-name {
+    color: #fabd2f;
+  }
+
+  .token.boolean,
+  .token.number,
+  .token.constant,
+  .token.symbol,
+  .token.deleted {
+    color: #d3869b;
+  }
+
+  .token.string,
+  .token.char,
+  .token.attr-value,
+  .token.builtin,
+  .token.inserted {
+    color: #b8bb26;
+  }
+
+  .token.variable {
+    color: #83a598;
+  }
+
+  .token.operator {
+    color: #fe8019;
+  }
+
+  .token.entity {
+    color: #8ec07c;
+    cursor: help;
+  }
+
+  .token.url {
+    color: #83a598;
+  }
+}
