@@ -48,7 +48,7 @@ export default function RootLayout({
                   />
                   <div className="hidden dark:block absolute inset-0 w-full h-full" 
                     style={{
-                      backgroundImage: `radial-gradient(circle, rgb(255 255 255 / 0.1) 1px, transparent 1px)`,
+                      backgroundImage: `radial-gradient(circle, rgb(107 114 128 / 0.1) 1px, transparent 1px)`,
                       backgroundSize: '20px 20px',
                     }}
                   />
