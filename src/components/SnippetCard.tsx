@@ -114,7 +114,10 @@ const SnippetCard = ({
                   customStyle={{
                     margin: 0,
                     borderRadius: '0.375rem',
+                    maxHeight: '400px',
+                    overflow: 'auto',
                   }}
+                  wrapLongLines={true}
                 >
                   {code}
                 </SyntaxHighlighter>

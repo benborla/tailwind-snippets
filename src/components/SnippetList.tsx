@@ -83,7 +83,7 @@ export default function SnippetList({ snippets, isLoading, onSnippetDeleted }: S
 
   if (isLoading) {
     return (
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
         {Array.from({ length: 6 }).map((_, i) => (
           <SnippetSkeleton key={i} />
         ))}
@@ -135,7 +135,7 @@ export default function SnippetList({ snippets, isLoading, onSnippetDeleted }: S
         </DialogContent>
       </Dialog>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
         {snippets.map((snippet) => (
           <SnippetCard
             key={snippet.id}

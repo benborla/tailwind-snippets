@@ -3,9 +3,15 @@ import { Pool } from 'pg';
 import * as schema from './schema';
 import { eq } from 'drizzle-orm';
 
+if (!process.env.DATABASE_URL) {
+  throw new Error('DATABASE_URL environment variable is required but not set');
+}
+
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_t3mQIy6sKuvV@ep-floral-firefly-a59fc6o6-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require',
-  ssl: true,
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false // Required for some hosting providers
+  }
 });
 
 export const db = drizzle(pool, { schema });

@@ -19,11 +19,13 @@ export async function createSnippet(data: {
 
 export async function getSnippets() {
   try {
+    console.log('Fetching snippets from database...');
     const snippets = await dbGetSnippets();
+    console.log('Successfully fetched snippets:', snippets);
     return snippets;
   } catch (error) {
     console.error('Error fetching snippets:', error);
-    throw new Error('Failed to fetch snippets');
+    return [];
   }
 }
 
