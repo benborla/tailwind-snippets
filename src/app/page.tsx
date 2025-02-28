@@ -105,7 +105,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-screen flex flex-col">
       <main className="flex-1 px-4 py-8 md:px-8">
         <div className="container max-w-6xl mx-auto flex flex-col min-h-[calc(100vh-8rem)] space-y-8">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
