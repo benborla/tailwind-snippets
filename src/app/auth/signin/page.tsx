@@ -3,8 +3,9 @@
 import { signIn } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { Github } from 'lucide-react';
+import { Suspense } from 'react';
 
-export default function SignIn() {
+function SignInContent() {
   return (
     <div className="flex min-h-screen items-center justify-center">
       <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
@@ -27,5 +28,13 @@ export default function SignIn() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense>
+      <SignInContent />
+    </Suspense>
   );
 } 

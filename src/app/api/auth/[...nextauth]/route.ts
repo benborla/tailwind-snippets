@@ -1,5 +1,6 @@
 import NextAuth from 'next-auth';
 import GithubProvider from 'next-auth/providers/github';
+import { Session } from 'next-auth';
 
 const handler = NextAuth({
   providers: [
@@ -12,7 +13,7 @@ const handler = NextAuth({
     signIn: '/auth/signin',
   },
   callbacks: {
-    async session({ session, token }) {
+    async session({ session, token }): Promise<Session> {
       if (session.user) {
         session.user.id = token.sub!;
       }

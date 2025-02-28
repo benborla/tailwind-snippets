@@ -5,6 +5,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { PostHogProvider, PostHogPageview } from "@/components/providers/posthog-provider";
 import { SessionProvider } from "@/components/providers/session-provider";
 import { Header } from "@/components/Header";
+import { Suspense } from "react";
+import Loading from "./loading";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,10 +32,16 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               <div className="relative min-h-screen flex flex-col">
-                <Header />
+                <Suspense fallback={<div className="h-14 bg-background/95 backdrop-blur" />}>
+                  <Header />
+                </Suspense>
                 <main className="flex-1">
-                  <PostHogPageview />
-                  {children}
+                  <Suspense>
+                    <PostHogPageview />
+                  </Suspense>
+                  <Suspense fallback={<Loading />}>
+                    {children}
+                  </Suspense>
                 </main>
               </div>
             </ThemeProvider>
