@@ -3,7 +3,6 @@
 import { getSnippets } from '@/app/actions';
 import SnippetList from '@/components/SnippetList';
 import CreateSnippetDialog from '@/components/CreateSnippetDialog';
-import ModeToggle from '@/components/mode-toggle';
 import SnippetControls from '@/components/SnippetControls';
 import SnippetPagination from '@/components/SnippetPagination';
 import Footer from '@/components/Footer';
@@ -109,7 +108,6 @@ export default function Home() {
               <p className="text-sm sm:text-base text-muted-foreground mt-2">A collection of reusable Tailwind CSS components</p>
             </div>
             <div className="flex items-center gap-4 w-full sm:w-auto justify-center sm:justify-end">
-              <ModeToggle />
               <CreateSnippetDialog onSnippetCreated={handleSnippetCreated} />
             </div>
           </div>
