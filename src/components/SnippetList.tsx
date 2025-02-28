@@ -109,7 +109,7 @@ export default function SnippetList({ snippets, isLoading, onSnippetDeleted }: S
               Are you sure you want to delete this snippet? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter>
+          <DialogFooter className="flex flex-col gap-2">
             <Button 
               variant="outline" 
               onClick={() => setDeleteDialogOpen(false)}
