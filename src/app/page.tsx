@@ -28,6 +28,11 @@ export default function Home() {
     fetchSnippets();
   };
 
+  const handleSnippetDeleted = () => {
+    setIsLoading(true);
+    fetchSnippets();
+  };
+
   // Get unique categories from snippets
   const categories = useMemo(() => {
     const uniqueCategories = new Set(
@@ -120,7 +125,11 @@ export default function Home() {
           />
 
           <div className="flex-grow">
-            <SnippetList snippets={currentSnippets} isLoading={isLoading} />
+            <SnippetList 
+              snippets={currentSnippets} 
+              isLoading={isLoading} 
+              onSnippetDeleted={handleSnippetDeleted}
+            />
           </div>
 
           <SnippetPagination

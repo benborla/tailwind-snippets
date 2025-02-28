@@ -12,6 +12,7 @@ interface SnippetCardProps {
   category?: string | null;
   id: number;
   onDeleteClick: (id: number) => void;
+  onView?: (id: number) => void;
   isDeleting?: boolean;
   deletingId?: number | null;
 }
@@ -25,6 +26,7 @@ const SnippetCard = ({
   category,
   id,
   onDeleteClick,
+  onView,
   isDeleting,
   deletingId,
 }: SnippetCardProps) => {
@@ -38,6 +40,13 @@ const SnippetCard = ({
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error('Failed to copy:', err);
+    }
+  };
+
+  const handleTabChange = (tab: Tab) => {
+    setActiveTab(tab);
+    if (tab === 'code' && onView) {
+      onView(id);
     }
   };
 
@@ -67,7 +76,7 @@ const SnippetCard = ({
           <div className="border-b">
             <nav className="-mb-px flex gap-4" aria-label="Tabs">
               <button
-                onClick={() => setActiveTab('preview')}
+                onClick={() => handleTabChange('preview')}
                 className={cn(
                   'py-2 text-sm font-medium transition-colors relative',
                   activeTab === 'preview'
@@ -78,7 +87,7 @@ const SnippetCard = ({
                 Preview
               </button>
               <button
-                onClick={() => setActiveTab('code')}
+                onClick={() => handleTabChange('code')}
                 className={cn(
                   'py-2 text-sm font-medium transition-colors relative',
                   activeTab === 'code'

@@ -17,6 +17,7 @@ import { Label } from '@/components/ui/label';
 import { createSnippet } from '@/app/actions';
 import { useRouter } from 'next/navigation';
 import CodeEditor from './CodeEditor';
+import { trackSnippetEvent } from './providers/posthog-provider';
 
 interface CreateSnippetDialogProps {
   onSnippetCreated: () => void;
@@ -41,7 +42,14 @@ export default function CreateSnippetDialog({ onSnippetCreated }: CreateSnippetD
     };
 
     try {
-      await createSnippet(data);
+      const result = await createSnippet(data);
+      if (result.success && result.id) {
+        trackSnippetEvent('create', result.id.toString(), {
+          title: data.title,
+          category: data.category,
+          has_description: !!data.description,
+        });
+      }
       setOpen(false);
       onSnippetCreated();
       e.currentTarget.reset();

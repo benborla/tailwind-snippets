@@ -19,13 +19,15 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import SnippetCard from './SnippetCard';
+import { trackSnippetEvent } from './providers/posthog-provider';
 
 interface SnippetListProps {
   snippets: InferSelectModel<typeof snippets>[];
   isLoading: boolean;
+  onSnippetDeleted: () => void;
 }
 
-export default function SnippetList({ snippets, isLoading }: SnippetListProps) {
+export default function SnippetList({ snippets, isLoading, onSnippetDeleted }: SnippetListProps) {
   const [copiedId, setCopiedId] = useState<number | null>(null);
   const [mounted, setMounted] = useState(false);
   const [snippetToDelete, setSnippetToDelete] = useState<number | null>(null);
@@ -54,8 +56,9 @@ export default function SnippetList({ snippets, isLoading }: SnippetListProps) {
       setIsDeleting(true);
       const result = await deleteSnippet(snippetToDelete);
       if (result.success) {
+        trackSnippetEvent('delete', snippetToDelete.toString());
         setDeleteDialogOpen(false);
-        router.refresh();
+        onSnippetDeleted();
       }
     } catch (err) {
       console.error('Failed to delete:', err);
@@ -68,6 +71,10 @@ export default function SnippetList({ snippets, isLoading }: SnippetListProps) {
   const handleDeleteClick = (id: number) => {
     setSnippetToDelete(id);
     setDeleteDialogOpen(true);
+  };
+
+  const handleView = (id: number) => {
+    trackSnippetEvent('view', id.toString());
   };
 
   if (!mounted) {
@@ -140,6 +147,7 @@ export default function SnippetList({ snippets, isLoading }: SnippetListProps) {
             onDeleteClick={handleDeleteClick}
             isDeleting={isDeleting}
             deletingId={snippetToDelete}
+            onView={() => handleView(snippet.id)}
           />
         ))}
       </div>

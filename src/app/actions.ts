@@ -9,11 +9,11 @@ export async function createSnippet(data: {
   category?: string;
 }) {
   try {
-    await dbCreateSnippet(data);
-    return { success: true };
+    const snippet = await dbCreateSnippet(data);
+    return { success: true, id: snippet.id };
   } catch (error) {
     console.error('Error creating snippet:', error);
-    return { error: 'Failed to create snippet' };
+    return { success: false, error: 'Failed to create snippet' };
   }
 }
 
