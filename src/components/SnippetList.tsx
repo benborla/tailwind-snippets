@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { deleteSnippet } from '@/app/actions';
+import SnippetSkeleton from './SnippetSkeleton';
 import {
   Dialog,
   DialogContent,
@@ -17,10 +18,14 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "@/components/ui/dialog";
+import SnippetCard from './SnippetCard';
 
-type Snippet = InferSelectModel<typeof snippets>;
+interface SnippetListProps {
+  snippets: InferSelectModel<typeof snippets>[];
+  isLoading: boolean;
+}
 
-export default function SnippetList({ snippets }: { snippets: Snippet[] }) {
+export default function SnippetList({ snippets, isLoading }: SnippetListProps) {
   const [copiedId, setCopiedId] = useState<number | null>(null);
   const [mounted, setMounted] = useState(false);
   const [snippetToDelete, setSnippetToDelete] = useState<number | null>(null);
@@ -56,11 +61,35 @@ export default function SnippetList({ snippets }: { snippets: Snippet[] }) {
       console.error('Failed to delete:', err);
     } finally {
       setIsDeleting(false);
+      setSnippetToDelete(null);
     }
+  };
+
+  const handleDeleteClick = (id: number) => {
+    setSnippetToDelete(id);
+    setDeleteDialogOpen(true);
   };
 
   if (!mounted) {
     return null;
+  }
+
+  if (isLoading) {
+    return (
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <SnippetSkeleton key={i} />
+        ))}
+      </div>
+    );
+  }
+
+  if (snippets.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-muted-foreground">No snippets found</p>
+      </div>
+    );
   }
 
   return (
@@ -99,58 +128,19 @@ export default function SnippetList({ snippets }: { snippets: Snippet[] }) {
         </DialogContent>
       </Dialog>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {snippets.map((snippet) => (
-          <Card key={snippet.id} className="relative flex flex-col justify-between" data-list="test">
-            <Button
-              size="icon"
-              variant="ghost"
-              onClick={() => handleCopy(snippet.code, snippet.id)}
-              className="absolute top-4 right-4 text-muted-foreground hover:text-primary"
-              title="Copy code"
-            >
-              {copiedId === snippet.id ? (
-                <Check className="w-4 h-4 text-green-500" />
-              ) : (
-                <Copy className="w-4 h-4" />
-              )}
-            </Button>
-            <CardHeader className="space-y-1 pr-14">
-              <div className="space-y-1">
-                <CardTitle>{snippet.title}</CardTitle>
-                {snippet.description && (
-                  <CardDescription>{snippet.description}</CardDescription>
-                )}
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="rounded-lg overflow-hidden bg-muted">
-                <div className="p-4" dangerouslySetInnerHTML={{ __html: snippet.code }} />
-              </div>
-            </CardContent>
-            <CardFooter className="flex justify-between items-center">
-              <span className="inline-flex items-center rounded-md bg-primary/10 px-2 py-1 text-xs font-medium text-primary ring-1 ring-inset ring-primary/20">
-                {snippet.category || 'Uncategorized'}
-              </span>
-              <Button
-                size="icon"
-                variant="ghost"
-                onClick={() => {
-                  setSnippetToDelete(snippet.id);
-                  setDeleteDialogOpen(true);
-                }}
-                className="text-muted-foreground hover:text-destructive"
-                title="Delete snippet"
-                disabled={isDeleting && snippetToDelete === snippet.id}
-              >
-                {isDeleting && snippetToDelete === snippet.id ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Trash2 className="w-4 h-4" />
-                )}
-              </Button>
-            </CardFooter>
-          </Card>
+          <SnippetCard
+            key={snippet.id}
+            id={snippet.id}
+            title={snippet.title}
+            description={snippet.description}
+            code={snippet.code}
+            category={snippet.category}
+            onDeleteClick={handleDeleteClick}
+            isDeleting={isDeleting}
+            deletingId={snippetToDelete}
+          />
         ))}
       </div>
     </>

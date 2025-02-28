@@ -1,13 +1,15 @@
+require('dotenv').config();
+
 /** @type { import("drizzle-kit").Config } */
 module.exports = {
   schema: './src/db/schema.ts',
   out: './drizzle',
   dialect: 'postgresql',
   dbCredentials: {
-    host: 'ep-floral-firefly-a59fc6o6-pooler.us-east-2.aws.neon.tech',
-    user: 'neondb_owner',
-    password: 'npg_t3mQIy6sKuvV',
-    database: 'neondb',
+    host: process.env.DATABASE_HOST,
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    database: process.env.DATABASE_NAME,
     ssl: true
   }
 }; 

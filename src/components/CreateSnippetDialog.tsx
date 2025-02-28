@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 import { Plus, Loader2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { createSnippet } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -13,126 +11,119 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import CodeEditor from './CodeEditor';
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { createSnippet } from '@/app/actions';
+import { useRouter } from 'next/navigation';
 
-export default function CreateSnippetDialog() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isCreating, setIsCreating] = useState(false);
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    code: '',
-    category: '',
-  });
+interface CreateSnippetDialogProps {
+  onSnippetCreated: () => void;
+}
+
+export default function CreateSnippetDialog({ onSnippetCreated }: CreateSnippetDialogProps) {
+  const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
+
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      title: formData.get('title') as string,
+      description: formData.get('description') as string,
+      code: formData.get('code') as string,
+      category: formData.get('category') as string,
+    };
+
     try {
-      setIsCreating(true);
-      await createSnippet(formData);
-      setFormData({
-        title: '',
-        description: '',
-        code: '',
-        category: '',
-      });
-      setIsOpen(false);
-      router.refresh();
+      await createSnippet(data);
+      setOpen(false);
+      onSnippetCreated();
+      e.currentTarget.reset();
     } catch (error) {
-      console.error('Error creating snippet:', error);
+      console.error('Failed to create snippet:', error);
     } finally {
-      setIsCreating(false);
+      setIsLoading(false);
     }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="lg" className="gap-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700">
-          <Plus className="h-5 w-5" />
+        <Button className="w-full sm:w-auto">
+          <Plus className="w-4 h-4 mr-2" />
           New Snippet
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-2xl bg-background border">
-        <DialogHeader className="relative">
-          <DialogTitle className="text-xl">Create New Snippet</DialogTitle>
-          <DialogDescription className="text-muted-foreground">
-            Add a new Tailwind CSS snippet to your collection. Click save when you're done.
-          </DialogDescription>
-        </DialogHeader>
-
+      <DialogContent className="sm:max-w-[550px] max-h-[90vh] overflow-y-auto">
         <form onSubmit={handleSubmit}>
+          <DialogHeader>
+            <DialogTitle>Create Snippet</DialogTitle>
+            <DialogDescription>
+              Add a new Tailwind CSS snippet to your collection.
+            </DialogDescription>
+          </DialogHeader>
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="title" className="text-right">
-                Title
-              </Label>
+            <div className="grid gap-2">
+              <Label htmlFor="title">Title</Label>
               <Input
                 id="title"
-                value={formData.title}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
-                  setFormData({ ...formData, title: e.target.value })
-                }
-                className="col-span-3"
+                name="title"
+                placeholder="Button with icon"
                 required
-                disabled={isCreating}
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="description" className="text-right">
-                Description
-              </Label>
-              <Textarea
-                id="description"
-                value={formData.description}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => 
-                  setFormData({ ...formData, description: e.target.value })
-                }
                 className="col-span-3"
-                rows={3}
-                disabled={isCreating}
               />
             </div>
-            <div className="grid grid-cols-4 items-start gap-4">
-              <Label htmlFor="code" className="text-right">
-                Code
-              </Label>
-              <div className="col-span-3">
-                <CodeEditor
-                  onChange={(text: string) => setFormData({ ...formData, code: text })}
-                  initialValue={formData.code}
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="category" className="text-right">
-                Category
-              </Label>
+            <div className="grid gap-2">
+              <Label htmlFor="category">Category</Label>
               <Input
                 id="category"
-                value={formData.category}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
-                  setFormData({ ...formData, category: e.target.value })
-                }
+                name="category"
+                placeholder="buttons"
                 className="col-span-3"
-                disabled={isCreating}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                name="description"
+                placeholder="A beautiful button with an icon..."
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="code">Code</Label>
+              <Textarea
+                id="code"
+                name="code"
+                placeholder="<button class='px-4 py-2 bg-blue-500 text-white rounded-md'>Click me</button>"
+                required
+                className="col-span-3 font-mono min-h-[150px]"
               />
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" disabled={isCreating}>
-              {isCreating ? (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setOpen(false)}
+              disabled={isLoading}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                   Creating...
                 </>
               ) : (
-                'Create Snippet'
+                'Create'
               )}
             </Button>
           </DialogFooter>

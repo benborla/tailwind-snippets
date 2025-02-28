@@ -68,11 +68,10 @@
 @layer base {
   body {
     @apply bg-background text-foreground;
-    background-image: radial-gradient(circle at 1px 1px, rgb(0 0 0 / 0.05) 1px, transparent 0);
-    background-size: 24px 24px;
   }
 
   .dark body {
+    @apply bg-background text-foreground;
     background-image: none;
   }
 }
@@ -84,18 +83,6 @@
 
 @layer base {
   * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}
-
-@layer base {
-  * {
     @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
   }
 }
